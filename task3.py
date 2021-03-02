@@ -7,7 +7,7 @@ from dataloaders import load_cifar10
 from trainer import Trainer, compute_loss_and_accuracy
 
 
-class ExampleModel(nn.Module):
+class Model1(nn.Module):
 
     def __init__(self,
                  image_channels,
@@ -59,6 +59,61 @@ class ExampleModel(nn.Module):
         assert out.shape == (batch_size, self.num_classes),\
             f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
         return out
+
+class Model2(nn.Module):
+
+    def __init__(self,
+                 image_channels,
+                 num_classes):
+        """
+            Is called when model is initialized.
+            Args:
+                image_channels. Number of color channels in image (3)
+                num_classes: Number of classes we want to predict (10)
+        """
+        super().__init__()
+
+        self.num_classes = num_classes
+
+        # Define the convolutional layers
+        self.feature_extractor = nn.Sequential(
+            nn.Conv2d(in_channels=image_channels, out_channels=32, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=5, stride=1, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2)
+        )
+        # the feature_extractor outputs [num_classes, 128, 4, 4]
+
+        # Define the fully-connected layers
+        self.classifier = nn.Sequential(
+            nn.Linear(2048, 64),
+            nn.ReLU(inplace=True),
+            nn.Linear(64, 10)
+        )
+
+    def forward(self, x):
+        """
+        Performs a forward pass through the model
+        Args:
+            x: Input image, shape: [batch_size, 3, 32, 32]
+        """
+        batch_size = x.shape[0]
+        expected_shape = (batch_size, self.num_classes)
+
+        out = self.feature_extractor(x)
+        out = torch.flatten(out, 1)
+        out = self.classifier(out)
+
+        assert out.shape == (batch_size, self.num_classes),\
+            f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
+        return out
+
+
 
 
 def create_plots(trainer: Trainer, name: str):

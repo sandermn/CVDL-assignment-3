@@ -23,6 +23,10 @@ def compute_loss_and_accuracy(
     """
     average_loss = 0
     accuracy = 0
+    n_steps = 0
+    n_images = 0
+    n_correct = 0
+
     # TODO: Implement this function (Task  2a)
     with torch.no_grad():
         for (X_batch, Y_batch) in dataloader:
@@ -33,7 +37,13 @@ def compute_loss_and_accuracy(
             output_probs = model(X_batch)
 
             # Compute Loss and Accuracy
-
+            average_loss += loss_criterion(output_probs, Y_batch).item()
+            n_correct += (output_probs.argmax(axis=1).squeeze() == Y_batch.squeeze()).sum().item()
+            n_steps += 1
+            n_images += output_probs.argmax(axis=1).shape[0]
+    
+    average_loss = average_loss / n_steps
+    accuracy = n_correct / n_images
     return average_loss, accuracy
 
 
