@@ -99,3 +99,6 @@ if __name__ == "__main__":
     )
     trainer.train()
     create_plots(trainer, "task2")
+
+    # task 2b - printing last training accuracy
+    #print(f'Final training accuracy: {list(trainer.train_history["accuracy"].values())[-1]}')
