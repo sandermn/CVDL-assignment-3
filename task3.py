@@ -176,3 +176,4 @@ if __name__ == "__main__":
     )
     trainer.train()
     create_plots(trainer, f"task3_model1_F{F}_p{p}_n{n_filters[0]}-{n_filters[1]}-{n_filters[2]}-{n_filters[3]}_new_structure")
+    #comment
