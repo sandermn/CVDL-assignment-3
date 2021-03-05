@@ -62,47 +62,28 @@ def task_b():
 
     pass
 
-"""
+
 def task_c():
     
-    itr_obj_model = enumerate(model.children())
-    activation_lc = image
+  
+
+    new_model = nn.Sequential(*list(model.children())[:-3])
+    activation = new_model.forward(image)
+
     plt.figure(figsize=(20, 8))
-    for i, c in itr_obj_model:
-        #print(c)
-        activation_lc= c(activation_lc)
-        if (i == 7): #found by prints
-            print("lastchild: ",  activation_lc.shape) 
-            for i in range(10):
-                img = torch_image_to_numpy(activation_lc[0][i])
-                plt.subplot(1, 10, i+1)
-                plt.imshow(img)
-            plt.savefig('visualize_pic_b.png', format="png")
-            plt.show()
-            pass
+    for j, i in enumerate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]):
+        plt.subplot(2, 5, j + 1)
+        image_activation = torch_image_to_numpy(activation[0, i, :, :])
+        plt.imshow(image_activation)
+
+    plt.show()
+    plt.savefig('visualize_pic_c.png', format ="png")
+    
+    pass
        
 
 task_c()
-
-
-
-"""
-firstIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-new_model = nn.Sequential(*list(model.children())[:-3])
-activation = new_model.forward(image)
-
-plt.figure(figsize=(20, 4))
-for i, idx in enumerate(firstIndices):
-    plt.subplot(2, 5, i + 1)
-    image_activation = torch_image_to_numpy(activation[0, idx, :, :])
-    plt.imshow(image_activation, cmap = "gray")
-
-plt.show()
-plt.savefig('Visualization2.png', format ="png")
-    
-
-#task_b()
+task_b()
 
 
 
