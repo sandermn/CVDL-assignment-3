@@ -61,7 +61,7 @@ def task_b():
 
     pass
 
-
+''''
 def task_c():
     
     itr_obj_model = enumerate(model.children())
@@ -69,7 +69,7 @@ def task_c():
     plt.figure(figsize=(20, 8))
     for i, c in itr_obj_model:
         #print(c)
-        activation_lc= c.activation_lc
+        activation_lc= c(activation_lc)
         if (i == 7): #found by prints
             print("lastchild: ",  activation_lc.shape) 
             for i in range(10):
@@ -82,6 +82,33 @@ def task_c():
        
 
 task_c()
+
+
+
+''''
+
+
+#############
+# Task 4 c  #
+#############
+activation_1 = image
+plt.figure(figsize=(20, 8))
+for i,child in enumerate(model.children()):
+    print(child)
+    activation_1 = child(activation_1)
+    if (i+1 ==8): #Trial and error!
+        print("Lastchild:",activation_1.shape)
+        break
+
+for i in range(10): #Plot the 10 first filters from the last convolution layer
+    img = torch_image_to_numpy(activation_1[0][i])
+    plt.subplot(1, 10, i+1)
+    plt.imshow(img)
+plt.savefig("plots/4c.png")
+plt.show()
+
+    
+
 #task_b()
 
 
