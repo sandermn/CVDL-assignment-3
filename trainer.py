@@ -202,6 +202,11 @@ class Trainer:
                     self.save_model()
                     if self.should_early_stop():
                         print("Early stopping.")
+                        # task 2b
+                        train_loss, train_acc = compute_loss_and_accuracy(
+                            self.dataloader_train, self.model, self.loss_criterion
+                        )
+                        print(f'Final training loss: {train_loss:0.2f}, Final train accuracy: {train_acc:0.3f}')  
                         return
 
     def save_model(self):

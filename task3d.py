@@ -8,7 +8,7 @@ from dataloaders import load_cifar10
 from trainer import Trainer, compute_loss_and_accuracy
 
 
-class Model1(nn.Module):
+class Model1_with_dropout(nn.Module):
 
     def __init__(self,
                  image_channels,
@@ -82,8 +82,9 @@ class Model1(nn.Module):
         assert out.shape == (batch_size, self.num_classes),\
             f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
         return out
+    
 
-class Model2(nn.Module):
+class Model1_without_dropout(nn.Module):
 
     def __init__(self,
                  image_channels,
@@ -106,35 +107,36 @@ class Model2(nn.Module):
         self.padding = padding
         self.n_filters = n_filters
         
-        # Define the transforms
-        self.transforms = nn.Sequential(
-            transforms.ColorJitter(brightness=(0,2), contrast=(0,2), saturation=(0,2), hue=(-0.5,0.5)),
-            #transforms.Pad(25, padding_mode='symmetric'),
-            transforms.RandomHorizontalFlip(), 
-            transforms.RandomRotation(10)
-        )
 
         # Define the convolutional layers
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(in_channels=image_channels, out_channels=self.n_filters[0], kernel_size=self.kernel_size, stride=1, padding=self.padding),
             nn.ReLU(inplace=True),
+            nn.BatchNorm2d(num_features=self.n_filters[0]),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            
             nn.Conv2d(in_channels=self.n_filters[0], out_channels=self.n_filters[1], kernel_size=self.kernel_size, stride=1, padding=self.padding),
             nn.ReLU(inplace=True),
+            nn.BatchNorm2d(num_features=self.n_filters[1]),
             nn.MaxPool2d(kernel_size=2, stride=2),
             
             nn.Conv2d(in_channels=self.n_filters[1], out_channels=self.n_filters[2], kernel_size=self.kernel_size, stride=1, padding=self.padding),
             nn.ReLU(inplace=True),
+            nn.BatchNorm2d(num_features=self.n_filters[2]),
             nn.Conv2d(in_channels=self.n_filters[2], out_channels=self.n_filters[3], kernel_size=self.kernel_size, stride=1, padding=self.padding),
             nn.ReLU(inplace=True),
+            nn.BatchNorm2d(num_features=self.n_filters[3]),
             nn.MaxPool2d(kernel_size=2, stride=2)
         )
-        # the feature_extractor outputs [num_classes, n_filters[-1], 4, 4]
-        self.num_output_features = self.n_filters[3]*8*8
-
+        
+        # the feature_extractor outputs [num_classes, 128, 4, 4]
+        self.num_output_features = self.n_filters[3]*4*4
+        
         # Define the fully-connected layers
         self.classifier = nn.Sequential(
             nn.Linear(self.num_output_features, 64),
             nn.ReLU(inplace=True),
+            nn.BatchNorm1d(num_features=64),
             nn.Linear(64, 10)
         )
 
@@ -146,8 +148,7 @@ class Model2(nn.Module):
         """
         batch_size = x.shape[0]
         expected_shape = (batch_size, self.num_classes)
-        
-        out = self.transforms(x)
+
         out = self.feature_extractor(x)
         out = torch.flatten(out, 1)
         out = self.classifier(out)
@@ -155,23 +156,24 @@ class Model2(nn.Module):
         assert out.shape == (batch_size, self.num_classes),\
             f"Expected output of forward pass to be: {expected_shape}, but got: {out.shape}"
         return out
+    
 
-
-
-
-def create_plots(trainer: Trainer, name: str):
+def create_plots(trainer1: Trainer, trainer2: Trainer, name: str):
     plot_path = pathlib.Path("plots")
     plot_path.mkdir(exist_ok=True)
     # Save plots and show them
     plt.figure(figsize=(20, 8))
     plt.subplot(1, 2, 1)
     plt.title("Cross Entropy Loss")
-    utils.plot_loss(trainer.train_history["loss"], label="Training loss", npoints_to_average=10)
-    utils.plot_loss(trainer.validation_history["loss"], label="Validation loss")
+    utils.plot_loss(trainer1.train_history["loss"], label="Training loss (with dropout)", npoints_to_average=10)
+    utils.plot_loss(trainer2.train_history["loss"], label="Training loss", npoints_to_average=10)
+    utils.plot_loss(trainer1.validation_history["loss"], label="Validation loss (with dropout)")
+    utils.plot_loss(trainer2.validation_history["loss"], label="Validation loss")
     plt.legend()
     plt.subplot(1, 2, 2)
     plt.title("Accuracy")
-    utils.plot_loss(trainer.validation_history["accuracy"], label="Validation Accuracy")
+    utils.plot_loss(trainer1.validation_history["accuracy"], label="Validation Accuracy (with dropout)")
+    utils.plot_loss(trainer2.validation_history["accuracy"], label="Validation Accuracy")
     plt.legend()
     plt.savefig(plot_path.joinpath(f"{name}_plot.png"))
     plt.show()
@@ -188,13 +190,13 @@ if __name__ == "__main__":
     dataloaders = load_cifar10(batch_size)
     
     
-    # --- MODEL 1
+    # --- MODEL 1 with dropout
     F = 5
     p = 2
     n_filters = [64, 128, 256, 512]    
     
     # training model1
-    model1 = Model1(
+    model1 = Model1_with_dropout(
         image_channels=3, 
         num_classes=10, 
         kernel_size=F, 
@@ -202,7 +204,7 @@ if __name__ == "__main__":
         n_filters=n_filters
     )
     
-    trainer = Trainer(
+    trainer1 = Trainer(
         batch_size,
         learning_rate,
         early_stop_count,
@@ -210,24 +212,20 @@ if __name__ == "__main__":
         model1,
         dataloaders
     )
-    trainer.train()
-    create_plots(trainer, f"task3_model1")
+    trainer1.train()
     
+    # --- MODEL 1 without dropout
     
-    # --- MODEL 2
+    # training model1
+    model2 = Model1_without_dropout(
+        image_channels=3, 
+        num_classes=10, 
+        kernel_size=F, 
+        padding=p,
+        n_filters=n_filters
+    )
     
-    #parameters to experiment with
-    F = 5
-    p = 2
-    n_filters = [64, 128, 256, 512]
-    
-    # training model2
-    model2 = Model2(image_channels=3, 
-                    num_classes=10, 
-                    kernel_size=F, 
-                    padding=p,
-                    n_filters=n_filters)
-    trainer = Trainer(
+    trainer2 = Trainer(
         batch_size,
         learning_rate,
         early_stop_count,
@@ -235,6 +233,7 @@ if __name__ == "__main__":
         model2,
         dataloaders
     )
-    trainer.train()
-    create_plots(trainer, f"task3_model2")
+    trainer2.train()
     
+    
+    create_plots(trainer1, trainer2, f"task3d")
