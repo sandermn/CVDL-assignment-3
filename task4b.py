@@ -69,7 +69,7 @@ def task_c():
     for i, c in itr_obj_model:
         #print(c)
         activation_last_child = child(activation_last_child)
-        if (i == 7) #found by prints
+        if (i == 7): #found by prints
             print("last: ",  activation_last_child.shape) 
             for i in range(10):
                 img = torch_image_to_numpy(activation[0][i])
