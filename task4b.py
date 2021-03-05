@@ -52,23 +52,33 @@ def task_b():
     plt.figure(figsize=(20, 8))
     L = len(indices)
     for i in range(L):
-        image = torch_image_to_numpy(activation[0][indices[i]])
+        img = torch_image_to_numpy(activation[0][indices[i]])
         plt.subplot(1, 5, i + 1)
-        plt.imshow(image)
+        plt.imshow(img)
 
     plt.show()
-    plt.savefig('Visualize_pic.png', format="png")
+    plt.savefig('visualize_pic_b.png', format="png")
 
     pass
 
 
 def task_c():
+    
+    itr_obj_model = enumerate(model.children())
     plt.figure(figsize=(20, 8))
-    obj = enumerate(model.children())
-    for i, c in obj:
-        print(c)
-
-    pass
+    for i, c in itr_obj_model:
+        #print(c)
+        activation_last_child = child(activation_last_child)
+        if (i == 7) #found by prints
+            print("last: ",  activation_last_child.shape) 
+            for i in range(10):
+                img = torch_image_to_numpy(activation[0][i])
+                plt.subplot(1, 10, i+1)
+                plt.imshow(img)
+            plt.savefig('visualize_pic_b.png', format="png")
+            plt.show()
+            pass
+       
 
 
 task_b()
