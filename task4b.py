@@ -61,7 +61,7 @@ def task_b():
 
     pass
 
-''''
+"""
 def task_c():
     
     itr_obj_model = enumerate(model.children())
@@ -85,7 +85,7 @@ task_c()
 
 
 
-''''
+"""
 
 new_model = nn.Sequential(*list(model.children())[:-3])
 activation = new_model.forward(image)
