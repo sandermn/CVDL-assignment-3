@@ -67,13 +67,13 @@ def task_c():
     
   
 
-    new_model = nn.Sequential(*list(model.children())[:-3])
-    activation = new_model.forward(image)
+
+    activation_1 = nn.Sequential(*list(model.children())[:-3]).forward(image)
 
     plt.figure(figsize=(20, 8))
     for j, i in enumerate([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]):
         plt.subplot(2, 5, j + 1)
-        image_activation = torch_image_to_numpy(activation[0, i, :, :])
+        image_activation = torch_image_to_numpy(activation_1[0, i, :, :])
         plt.imshow(image_activation)
 
     plt.show()
