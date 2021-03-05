@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 from PIL import Image
 import torchvision
-import torch
+import torch 
+from torch import nn 
 import numpy as np
 image = Image.open("images/zebra.jpg")
 print("Image shape:", image.size)
