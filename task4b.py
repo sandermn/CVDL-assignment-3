@@ -45,23 +45,40 @@ def torch_image_to_numpy(image: torch.Tensor):
     image = np.moveaxis(image, 0, 2)
     return image
 
+task_b()
+task_c()
+
+
+def task_b():
+    
+    indices = [14, 26, 32, 49, 52]
+    plt.figure(figsize=(20, 8))
+    L = len(indices)
+    for i in range(L):
+        image = torch_image_to_numpy(activation[0][indices[i]])
+        plt.subplot(1, 5, i+1)
+        plt.imshow(image)
+
+    plt.show()
+    plt.savefig('Visualize_pic.png', format ="png")
+
+    pass
+
+def task_c():
+     plt.figure(figsize=(20, 8))
+     obj = numerate(model.children())
+     for i, c in obj:
+            print(c)
+    
+    
+    
+    
+    pass
+
+task_b()
+task_c()
 
 
 
-
-''''
-task 4b
-''''
-
-indices = [14, 26, 32, 49, 52]
-plt.figure(figsize=(20, 8))
-L = len(indices)
-for i in range(L):
-    image = torch_image_to_numpy(activation[0][indices[index]])
-    plt.subplot(1, 5, i+1)
-    plt.imshow(image)
-
-plt.show()
-plt.savefig('Visualize_pic.png', format ="png")
 
 
