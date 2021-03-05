@@ -44,18 +44,3 @@ def torch_image_to_numpy(image: torch.Tensor):
     assert image.shape[0] == 3, "Expected color channel to be on first axis. Got: {}".format(image.shape)
     image = np.moveaxis(image, 0, 2)
     return image
-
-''''
-task 4b
-''''
-
-indices = [14, 26, 32, 49, 52]
-plt.figure(figsize=(20, 8))
-L = len(indices)
-for i in range(L):
-    image = torch_image_to_numpy(activation[0][indices[index]])
-    plt.subplot(1, 5, i+1)
-    plt.imshow(image)
-
-plt.show()
-plt.savefig('Visualize_pic.png', format ="png")
