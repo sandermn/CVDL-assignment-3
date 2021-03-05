@@ -87,26 +87,17 @@ task_c()
 
 ''''
 
+new_model = nn.Sequential(*list(model.children())[:-3])
+activation = new_model.forward(image)
 
-#############
-# Task 4 c  #
-#############
-activation_1 = image
-plt.figure(figsize=(20, 8))
-for i,child in enumerate(model.children()):
-    print(child)
-    activation_1 = child(activation_1)
-    if (i+1 ==8): #Trial and error!
-        print("Lastchild:",activation_1.shape)
-        break
+plt.figure(figsize=(20, 4))
+for i, idx in enumerate(firstIndices):
+    plt.subplot(2, 5, i + 1)
+    image_activation = torch_image_to_numpy(activation[0, idx, :, :])
+    plt.imshow(image_activation, cmap = "gray")
 
-for i in range(10): #Plot the 10 first filters from the last convolution layer
-    img = torch_image_to_numpy(activation_1[0][i])
-    plt.subplot(1, 10, i+1)
-    plt.imshow(img)
-plt.savefig("plots/4c.png")
 plt.show()
-
+plt.savefig('Visualization2.png', format ="png")
     
 
 #task_b()
