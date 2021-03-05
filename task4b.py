@@ -7,7 +7,7 @@ image = Image.open("images/zebra.jpg")
 print("Image shape:", image.size)
 
 model = torchvision.models.resnet18(pretrained=True)
-print(model)
+#print(model)
 first_conv_layer = model.conv1
 print("First conv layer weight shape:", first_conv_layer.weight.shape)
 print("First conv layer:", first_conv_layer)
@@ -81,9 +81,9 @@ def task_c():
             pass
        
 
-
-task_b()
 task_c()
+task_b()
+
 
 
 
