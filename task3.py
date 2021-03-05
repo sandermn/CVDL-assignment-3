@@ -56,6 +56,8 @@ class Model1(nn.Module):
         # the feature_extractor outputs [num_classes, 128, 4, 4]
         self.num_output_features = self.n_filters[3]*4*4
         
+        
+        # old
         # Define the fully-connected layers
         self.classifier = nn.Sequential(
             nn.Dropout(),
@@ -65,6 +67,24 @@ class Model1(nn.Module):
             nn.Dropout(),
             nn.Linear(64, 10)
         )
+        """
+        
+        # task 3e
+        # Define the fully-connected layers
+        self.classifier = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(self.num_output_features, 2048),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm1d(num_features=2048),
+            nn.Dropout(),
+            nn.Linear(2048, 64),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm1d(num_features=64),
+            nn.Dropout(),
+            nn.Linear(64, 10)
+        )
+        """
+        
 
     def forward(self, x):
         """
@@ -189,8 +209,8 @@ if __name__ == "__main__":
     
     
     # --- MODEL 1
-    F = 5
-    p = 2
+    F = 3
+    p = 1
     n_filters = [64, 128, 256, 512]    
     
     # training model1
@@ -215,7 +235,7 @@ if __name__ == "__main__":
     
     
     # --- MODEL 2
-    
+    """
     #parameters to experiment with
     F = 5
     p = 2
@@ -237,4 +257,5 @@ if __name__ == "__main__":
     )
     trainer.train()
     create_plots(trainer, f"task3_model2")
+    """
     

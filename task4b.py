@@ -49,15 +49,15 @@ def torch_image_to_numpy(image: torch.Tensor):
 
 
 
-''''
-task 4b
-''''
+
+# task 4b
+
 
 indices = [14, 26, 32, 49, 52]
 plt.figure(figsize=(20, 8))
 L = len(indices)
 for i in range(L):
-    image = torch_image_to_numpy(activation[0][indices[index]])
+    image = torch_image_to_numpy(activation[0][indices[i]])
     plt.subplot(1, 5, i+1)
     plt.imshow(image)
 
