@@ -73,7 +73,7 @@ def task_c():
         if (i == 7): #found by prints
             print("last: ",  activation_lc.shape) 
             for i in range(10):
-                img = torch_image_to_numpy(activation[0][i])
+                img = torch_image_to_numpy(activation_lc[0][i])
                 plt.subplot(1, 10, i+1)
                 plt.imshow(img)
             plt.savefig('visualize_pic_b.png', format="png")
