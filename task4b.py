@@ -65,12 +65,13 @@ def task_b():
 def task_c():
     
     itr_obj_model = enumerate(model.children())
+    activation_lc = image
     plt.figure(figsize=(20, 8))
     for i, c in itr_obj_model:
         #print(c)
-        activation_last_child = c(activation_last_child)
+        activation_lc= c(activation_lc)
         if (i == 7): #found by prints
-            print("last: ",  activation_last_child.shape) 
+            print("last: ",  activation_lc.shape) 
             for i in range(10):
                 img = torch_image_to_numpy(activation[0][i])
                 plt.subplot(1, 10, i+1)
