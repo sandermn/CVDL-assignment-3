@@ -64,7 +64,7 @@ def task_b():
 
 def task_c():
     plt.figure(figsize=(20, 8))
-    obj = numerate(model.children())
+    obj = enumerate(model.children())
     for i, c in obj:
         print(c)
 
