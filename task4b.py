@@ -71,7 +71,7 @@ def task_c():
         #print(c)
         activation_lc= c(activation_lc)
         if (i == 7): #found by prints
-            print("last: ",  activation_lc.shape) 
+            print("lastchild: ",  activation_lc.shape) 
             for i in range(10):
                 img = torch_image_to_numpy(activation_lc[0][i])
                 plt.subplot(1, 10, i+1)
@@ -82,7 +82,7 @@ def task_c():
        
 
 task_c()
-task_b()
+#task_b()
 
 
 
