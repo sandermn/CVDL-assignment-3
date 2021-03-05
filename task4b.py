@@ -87,6 +87,7 @@ task_c()
 
 
 """
+firstIndices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 new_model = nn.Sequential(*list(model.children())[:-3])
 activation = new_model.forward(image)
