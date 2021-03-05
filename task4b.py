@@ -45,8 +45,6 @@ def torch_image_to_numpy(image: torch.Tensor):
     return image
 
 
-task_b()
-task_c()
 
 
 def task_b():
@@ -71,5 +69,10 @@ def task_c():
         print(c)
 
     pass
+
+
+task_b()
+task_c()
+
 
 
