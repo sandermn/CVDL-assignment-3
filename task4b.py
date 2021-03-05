@@ -68,7 +68,7 @@ def task_c():
     plt.figure(figsize=(20, 8))
     for i, c in itr_obj_model:
         #print(c)
-        activation_last_child = child(activation_last_child)
+        activation_last_child = c(activation_last_child)
         if (i == 7): #found by prints
             print("last: ",  activation_last_child.shape) 
             for i in range(10):
